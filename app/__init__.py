@@ -13,12 +13,12 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    # Import des modèles ici (important pour les migrations)
-    from app.models import vehicle
+    # Import du modèle
+    from app.models import vehicule
 
     # Import et enregistrement des routes
-    from app.routes.vehicle_routes import vehicle_bp
-    app.register_blueprint(vehicle_bp, url_prefix='/api/vehicles')
+    from app.routes.vehicule_routes import vehicule_bp
+    app.register_blueprint(vehicule_bp, url_prefix='/api/vehicles')
 
     return app
 
