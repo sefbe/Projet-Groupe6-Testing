@@ -1,10 +1,26 @@
 from flask import Blueprint, request, jsonify
 from app.models.vehicule import db, Vehicle
+from app.models.user import User
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from functools import wraps
 
 vehicule_bp = Blueprint('vehicule_bp', __name__, url_prefix='/vehicles')
 
-# Create a vehicle
+# Décorateur pour vérifier le rôle admin
+def admin_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        if user and user.role == "admin":
+            return fn(*args, **kwargs)
+        return jsonify({"error": "Accès réservé aux administrateurs"}), 403
+    return wrapper
+
+# Create a vehicle (admin only)
 @vehicule_bp.route('', methods=['POST'])
+@jwt_required()
+@admin_required
 def create_vehicle():
     data = request.get_json()
     vehicle = Vehicle(
@@ -18,8 +34,9 @@ def create_vehicle():
     db.session.commit()
     return jsonify({'message': 'Vehicle created successfully'}), 201
 
-# Get all vehicles
+# Get all vehicles (auth required)
 @vehicule_bp.route('', methods=['GET'])
+@jwt_required()
 def get_vehicles():
     vehicles = Vehicle.query.all()
     return jsonify([{
@@ -31,8 +48,10 @@ def get_vehicles():
         'rentalPrice': v.rentalPrice
     } for v in vehicles])
 
-# Update a vehicle by ID
+# Update a vehicle by ID (admin only)
 @vehicule_bp.route('/<int:vehicle_id>', methods=['PUT'])
+@jwt_required()
+@admin_required
 def update_vehicle(vehicle_id):
     vehicle = Vehicle.query.get_or_404(vehicle_id)
     data = request.get_json()
@@ -44,16 +63,19 @@ def update_vehicle(vehicle_id):
     db.session.commit()
     return jsonify({'message': 'Vehicle updated successfully'})
 
-# Delete a vehicle by ID
+# Delete a vehicle by ID (admin only)
 @vehicule_bp.route('/<int:vehicle_id>', methods=['DELETE'])
+@jwt_required()
+@admin_required
 def delete_vehicle(vehicle_id):
     vehicle = Vehicle.query.get_or_404(vehicle_id)
     db.session.delete(vehicle)
     db.session.commit()
     return jsonify({'message': 'Vehicle deleted successfully'})
 
-# Search by registration number
+# Search by registration number (auth required)
 @vehicule_bp.route('/search/registration/<string:registration_number>', methods=['GET'])
+@jwt_required()
 def search_by_registration(registration_number):
     vehicle = Vehicle.query.filter_by(registrationNumber=registration_number).first()
     if not vehicle:
@@ -67,8 +89,9 @@ def search_by_registration(registration_number):
         'rentalPrice': vehicle.rentalPrice
     })
 
-# Search by rental price (vehicles <= price)
+# Search by rental price (auth required)
 @vehicule_bp.route('/search/price/<float:price>', methods=['GET'])
+@jwt_required()
 def search_by_price(price):
     vehicles = Vehicle.query.filter(Vehicle.rentalPrice <= price).all()
     return jsonify([{
