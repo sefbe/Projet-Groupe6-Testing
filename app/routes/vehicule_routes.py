@@ -90,9 +90,13 @@ def search_by_registration(registration_number):
     })
 
 # Search by rental price (auth required)
-@vehicule_bp.route('/search/price/<float:price>', methods=['GET'])
+@vehicule_bp.route('/search/price/<string:price>', methods=['GET'])
 @jwt_required()
 def search_by_price(price):
+    try:
+        price = float(price)
+    except ValueError:
+        return jsonify({'message': 'Invalid price format'}), 400
     vehicles = Vehicle.query.filter(Vehicle.rentalPrice <= price).all()
     return jsonify([{
         'id': v.id,
@@ -102,4 +106,51 @@ def search_by_price(price):
         'year': v.year,
         'rentalPrice': v.rentalPrice
     } for v in vehicles])
+# Search by make (auth required)
+@vehicule_bp.route('/search/make/<string:make>', methods=['GET'])
+@jwt_required()
+def search_by_make(make):
+    vehicles = Vehicle.query.filter(Vehicle.make.ilike(f'%{make}%')).all()
+    if not vehicles:
+        return jsonify({'message': 'No vehicles found for this make'}), 404
+    return jsonify([{
+        'id': v.id,
+        'registrationNumber': v.registrationNumber,
+        'make': v.make,
+        'model': v.model,
+        'year': v.year,
+        'rentalPrice': v.rentalPrice
+    } for v in vehicles])
+
+# Search by model (auth required)
+@vehicule_bp.route('/search/model/<string:model>', methods=['GET'])
+@jwt_required()
+def search_by_model(model):
+    vehicles = Vehicle.query.filter(Vehicle.model.ilike(f'%{model}%')).all()
+    if not vehicles:
+        return jsonify({'message': 'No vehicles found for this model'}), 404
+    return jsonify([{
+        'id': v.id,
+        'registrationNumber': v.registrationNumber,
+        'make': v.make,
+        'model': v.model,
+        'year': v.year,
+        'rentalPrice': v.rentalPrice
+    } for v in vehicles])
+# Search by year (auth required)
+@vehicule_bp.route('/search/year/<int:year>', methods=['GET'])
+@jwt_required()
+def search_by_year(year):
+    vehicles = Vehicle.query.filter(Vehicle.year == year).all()
+    if not vehicles:
+        return jsonify({'message': 'No vehicles found for this year'}), 404
+    return jsonify([{
+        'id': v.id,
+        'registrationNumber': v.registrationNumber,
+        'make': v.make,
+        'model': v.model,
+        'year': v.year,
+        'rentalPrice': v.rentalPrice
+    } for v in vehicles])
+
 

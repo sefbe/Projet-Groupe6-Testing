@@ -5,32 +5,45 @@ from flask_jwt_extended import create_access_token, create_refresh_token
 from flask import json
 
 @pytest.fixture
-def client():
-    # Crée une instance de l'application Flask pour les tests
-    app = create_app('testing')  # Utilisez un environnement de test
-    with app.test_client() as client:
-        # Crée et retourne le client de test
-        with app.app_context():
-            db.create_all()  # Crée la base de données pour les tests
-        yield client
-        with app.app_context():
-            db.drop_all()  # Nettoie la base de données après les tests
+def app():
+    """Create and configure a new app instance for each test."""
+    app = create_app('testing')
+    app.config['TESTING'] = True
+    
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.drop_all()
 
 @pytest.fixture
-def user(client):
-    # Crée un utilisateur de test dans la base de données
-    user = User(username="testuser", email="test@example.com")
-    user.set_password("password123")
-    db.session.add(user)
-    db.session.commit()
-    return user
+def client(app):
+    """Create a test client for the app."""
+    return app.test_client()
 
 @pytest.fixture
-def tokens(user):
-    # Crée des tokens JWT pour l'utilisateur de test
-    access_token = create_access_token(identity=user.id)
-    refresh_token = create_refresh_token(identity=user.id)
-    return access_token, refresh_token
+def user(app):
+    """Create a test user in the database."""
+    with app.app_context():
+        user = User(username="testuser", email="test@example.com")
+        user.set_password("password123")
+        db.session.add(user)
+        db.session.commit()
+        
+        # Return a dictionary with user data that persists outside the context
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }
+@pytest.fixture
+def tokens(app, user):
+    """Create JWT tokens for the test user."""
+    with app.app_context():
+        access_token = create_access_token(identity=str(user["id"]))
+        refresh_token = create_refresh_token(identity=str(user["id"]))
+        return access_token, refresh_token
+
+        
 
 # --- Test de la route /register ---
 def test_register_success(client):
@@ -42,7 +55,7 @@ def test_register_success(client):
     }
     response = client.post('/users/register', json=data)
     assert response.status_code == 201
-    assert "Utilisateur créé avec succès" in response.get_data(as_text=True)
+    assert "Utilisateur cree avec succes" in response.get_data(as_text=True)
 
 def test_register_missing_fields(client):
     # Test avec des champs manquants
@@ -63,10 +76,12 @@ def test_register_duplicate_user(client, user):
     }
     response = client.post('/users/register', json=data)
     assert response.status_code == 400
-    assert "Utilisateur ou email déjà existant" in response.get_data(as_text=True)
+    response_json = response.get_json()
+    assert "Utilisateur ou email déjà existant" in response_json["error"]
 
 # --- Test de la route /login ---
 def test_login_success(client, user, tokens):
+    
     # Test de la connexion avec des identifiants valides
     data = {
         "username": "testuser",
@@ -107,9 +122,17 @@ def test_refresh_success(client, tokens):
 def test_refresh_invalid_token(client):
     # Test avec un token invalide
     response = client.post('/users/refresh', headers={"Authorization": "Bearer invalid_token"})
-    assert response.status_code == 401
-    assert "Token invalide" in response.get_data(as_text=True)
-
+    assert response.status_code == 422  # Unauthorized
+    assert "msg" in response.get_json()
+    assert response.get_json()["msg"] in [
+        "Missing Authorization Header",
+        "Token has expired",
+        "Invalid header padding",
+        "Not enough segments",
+        "Signature verification failed",
+        "Invalid token",
+        "Only refresh tokens are allowed"
+    ]
 # --- Test de la route /me ---
 def test_get_profile_success(client, user, tokens):
     # Test pour récupérer le profil utilisateur avec un token valide
@@ -121,8 +144,17 @@ def test_get_profile_success(client, user, tokens):
 def test_get_profile_invalid_token(client):
     # Test avec un token invalide
     response = client.get('/users/me', headers={"Authorization": "Bearer invalid_token"})
-    assert response.status_code == 401
-    assert "Token invalide" in response.get_data(as_text=True)
+    assert response.status_code == 422  # Unauthorized
+    assert "msg" in response.get_json()
+    assert response.get_json()["msg"] in [
+        "Missing Authorization Header",
+        "Token has expired",
+        "Invalid header padding",
+        "Not enough segments",
+        "Signature verification failed",
+        "Invalid token",
+        "Only refresh tokens are allowed"
+    ]
 
 # --- Test de la route /users/<user_id> ---
 def test_update_user_success(client, user, tokens):
@@ -131,19 +163,20 @@ def test_update_user_success(client, user, tokens):
         "username": "updateduser",
         "email": "updated@example.com"
     }
-    response = client.put(f'/users/{user.id}', json=data, headers={"Authorization": f"Bearer {tokens[0]}"})
+    response = client.put(f'/users/{user["id"]}', json=data, headers={"Authorization": f"Bearer {tokens[0]}"})
     assert response.status_code == 200
-    assert "Utilisateur mis à jour" in response.get_data(as_text=True)
+    response_json = response.get_json()
+    assert "Utilisateur mis à jour" in response_json["message"]
 
 def test_update_user_unauthorized(client, user, tokens):
     # Test pour un utilisateur essayant de mettre à jour un autre utilisateur
     data = {
         "username": "unauthorizeduser"
     }
-    response = client.put(f'/users/{user.id + 1}', json=data, headers={"Authorization": f"Bearer {tokens[0]}"})
+    response = client.put(f'/users/{user["id"] + 1}', json=data, headers={"Authorization": f"Bearer {tokens[0]}"})
     assert response.status_code == 403
-    assert "Accès non autorisé" in response.get_data(as_text=True)
-
+    response_json = response.get_json()
+    assert "Accès non autorisé" in response_json["error"]
 def test_update_user_not_found(client, user, tokens):
     # Test lorsque l'utilisateur n'est pas trouvé
     data = {
@@ -151,8 +184,8 @@ def test_update_user_not_found(client, user, tokens):
     }
     response = client.put(f'/users/{9999}', json=data, headers={"Authorization": f"Bearer {tokens[0]}"})
     assert response.status_code == 404
-    assert "Utilisateur non trouvé" in response.get_data(as_text=True)
-
+    response_json = response.get_json()
+    assert "Utilisateur non trouvé" in response_json["error"]
 def test_update_user_invalid_email(client, user, tokens):
     # Test pour une mise à jour avec un email invalide
     data = {

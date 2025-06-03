@@ -15,13 +15,18 @@ def register():
 
     if User.query.filter((User.username == data["username"]) | (User.email == data["email"])).first():
         return jsonify({"error": "Utilisateur ou email déjà existant"}), 400
+    if "role" in data and data["role"] not in ["user", "admin"]:
+        return jsonify({"error": "Rôle invalide"}), 400
+    if "role" in data:
+        user = User(username=data["username"], email=data["email"], role=data["role"])
+    else:
+        user = User(username=data["username"], email=data["email"])
 
-    user = User(username=data["username"], email=data["email"])
     user.set_password(data["password"])
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({"message": "Utilisateur créé avec succès"}), 201
+    return jsonify({"message": "Utilisateur cree avec succes"}), 201
 
 @user_bp.route("/login", methods=["POST"])
 def login():
@@ -29,8 +34,8 @@ def login():
     user = User.query.filter_by(username=data.get("username")).first()
 
     if user and user.check_password(data.get("password")):
-        access_token = create_access_token(identity=user.id)
-        refresh_token = create_refresh_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
+        refresh_token = create_refresh_token(identity=str(user.id))
         return jsonify({
             "access_token": access_token,
             "refresh_token": refresh_token
@@ -58,7 +63,7 @@ def get_profile():
 @jwt_required()
 def update_user(user_id):
     current_id = get_jwt_identity()
-    if current_id != user_id:
+    if int(current_id) != user_id:
         return jsonify({"error": "Accès non autorisé"}), 403
 
     data = request.get_json()
