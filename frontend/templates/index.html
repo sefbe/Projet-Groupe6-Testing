@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentDrive - Premium Vehicle Rentals</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <!-- Navigation -->
+    <nav>
+      <div class="container">
+        <div class="nav-container">
+          <a href="#" class="logo" onclick="showPage('home')">🚗 RentaCar</a>
+          <ul class="nav-menu">
+            <li><a href="#">Home</a></li>
+            <!-- <li>
+              <a
+                onclick="showPage('dashboard')"
+                id="dashboardLink"
+                style="display: none"
+                >Dashboard</a
+              >
+            </li> -->
+          </ul>
+          <div class="auth-buttons" id="authButtons">
+            <a href="/login" class="btn btn-secondary">Login</a>
+            <a href="/register" class="btn btn-primary">Register</a>
+          </div>
+          <div class="auth-buttons" id="userButtons" style="display: none">
+            <span
+              style="color: white; margin-right: 1rem"
+              id="welcomeText"
+            ></span>
+            <!-- <a href="#" class="btn btn-secondary" onclick="logout()">Logout</a> -->
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+      <section class="hero">
+        <div class="container">
+          <div class="hero-content">
+            <h1>Premium Car Rental Service</h1>
+            <p>
+              Experience luxury and comfort with our premium fleet of vehicles
+            </p>
+            <a
+              href="#"
+              class="btn btn-primary cta-button"
+              onclick="showPage('register')"
+              >Start Your Journey</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="container">
+          <h2>Why Choose RentaCar?</h2>
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-icon">🚗</div>
+              <h3>Premium Fleet</h3>
+              <p>
+                Choose from our extensive collection of luxury and economy
+                vehicles, all maintained to the highest standards.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">⚡</div>
+              <h3>Instant Booking</h3>
+              <p>
+                Book your car instantly with our streamlined process. No
+                waiting, no hassle, just drive.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🛡️</div>
+              <h3>Full Insurance</h3>
+              <p>
+                Drive with confidence knowing you're fully covered with our
+                comprehensive insurance packages.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

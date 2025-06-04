@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="container">
+        <div class="nav-container">
+          <a href="#" class="logo" onclick="showPage('home')">🚗 RentaCar</a>
+          <ul class="nav-menu">
+            <li><a onclick="showPage('home')">Home</a></li>
+            <li>
+              <a
+                onclick="showPage('dashboard')"
+                id="dashboardLink"
+                style="display: none"
+                >Dashboard</a
+              >
+            </li>
+          </ul>
+          <div class="auth-buttons" id="authButtons">
+            <a href="/login" class="btn btn-secondary">Login</a>
+            <a href="/register" class="btn btn-primary">Register</a>
+          </div>
+          <div class="auth-buttons" id="userButtons" style="display: none">
+            <span
+              style="color: white; margin-right: 1rem"
+              id="welcomeText"
+            ></span>
+            <a href="#" class="btn btn-secondary" onclick="logout()">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Register Page -->
+    <div id="register" class="page">
+      <div class="container">
+        <div class="form-container">
+          <h2>Create Account</h2>
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="username">Full Name</label>
+              <input type="text" id="username" name="username" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+            <select id="role" name="role" required>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+            <div class="form-group">
+              <label for="registerPassword">Password</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword" required />
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+              Create Account
+            </button>
+          </form>
+          <div class="form-footer">
+            <p>
+              Already have an account?
+              <a href="/login">Sign in here</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    async function FormSubmit(event) {
+      event.preventDefault();
+
+      let usernameValue = document.getElementById("username").value;
+      let passwordValue = document.getElementById("password").value;
+      let emailValue = document.getElementById("email").value;
+      let roleValue = document.getElementById("role").value;
+
+      const resp = await fetch("http://127.0.0.1:5000/users/register", {
+        method: "post",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          username: usernameValue,
+          password: passwordValue,
+          email: emailValue,
+          role: roleValue,
+        }),
+      });
+
+      if (!resp.ok) {
+        const errorData = await resp.json();
+        console.error("Error:", errorData);
+        // redirect to same page with errors
+        window.location.href = `/register?error=${errorData.message}`;
+        return;
+      } else if (resp.status === 201) {
+        // redirect to login paeg
+        if (roleValue === "admin") {
+          window.location.href = "/admin";
+        } else {
+          // redirect to dashboard
+          window.location.href = "/dashboard";
+        }
+      }
+    }
+
+    let form = document.getElementById("registerForm");
+
+    form.addEventListener("submit", FormSubmit);
+  </script>
+</html>

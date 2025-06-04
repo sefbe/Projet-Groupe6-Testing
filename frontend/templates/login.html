@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="container">
+        <div class="nav-container">
+          <a href="#" class="logo" onclick="showPage('home')">🚗 RentaCar</a>
+          <ul class="nav-menu">
+            <li><a onclick="showPage('home')">Home</a></li>
+            <li>
+              <a
+                onclick="showPage('dashboard')"
+                id="dashboardLink"
+                style="display: none"
+                >Dashboard</a
+              >
+            </li>
+          </ul>
+          <div class="auth-buttons" id="authButtons">
+            <a href="#" class="btn btn-secondary" onclick="showPage('login')"
+              >Login</a
+            >
+            <a href="#" class="btn btn-primary" onclick="showPage('register')"
+              >Register</a
+            >
+          </div>
+          <div class="auth-buttons" id="userButtons" style="display: none">
+            <span
+              style="color: white; margin-right: 1rem"
+              id="welcomeText"
+            ></span>
+            <a href="#" class="btn btn-secondary" onclick="logout()">Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Login Page -->
+    <div id="login" class="page">
+      <div class="container">
+        <div class="form-container">
+          <h2>Welcome Back</h2>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select id="role" name="role" required>
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="Username">Username</label>
+              <input type="Username" id="username" name="Username" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required />
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+              Sign In
+            </button>
+          </form>
+          <div class="form-footer">
+            <p>
+              Don't have an account?
+              <a href="#" onclick="showPage('register')">Sign up here</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    async function FormSubmit(event) {
+      event.preventDefault();
+
+      let usernameValue = document.getElementById("username").value;
+      let passwordValue = document.getElementById("password").value;
+      let roleValue = document.getElementById("role").value;
+
+      const resp = await fetch("http://127.0.0.1:5000/users/login", {
+        method: "post",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          username: usernameValue,
+          password: passwordValue,
+        }),
+      });
+
+      if (!resp.ok) {
+        const errorData = await resp.json();
+        console.error("Error:", errorData);
+        // redirect to same page with errors
+        window.location.href = `/login?error=${errorData.message}`;
+        return;
+      } else if (resp.status === 201) {
+        // redirect to login paeg
+        console.log(roleValue);
+
+        if (roleValue == "admin") {
+          window.location.href = "/admin";
+        } else {
+          // redirect to dashboard
+          window.location.href = "/dashboard";
+        }
+      }
+    }
+
+    let form = document.getElementById("loginForm");
+
+    form.addEventListener("submit", FormSubmit);
+  </script>
+</html>
