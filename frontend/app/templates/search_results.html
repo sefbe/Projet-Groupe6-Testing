@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Search Results</h2>
+<div class="row">
+    {% for vehicle in vehicles %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <!-- <img src="/static/images/vehicle_placeholder.jpg" class="card-img-top" alt="Vehicle"> -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ vehicle.make }} {{ vehicle.model }}</h5>
+                    <p class="card-text">
+                        Registration Number: {{ vehicle.registration_number }}<br>
+                        Price: {{ vehicle.rental_price }}<br>
+                        Year: {{ vehicle.year }}<br>
+                         Available :{{ vehicle.available }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
