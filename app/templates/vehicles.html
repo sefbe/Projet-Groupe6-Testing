@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des véhicules</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+        }
+        #add-form {
+            display: none;
+            margin-top: 20px;
+        }
+        input, button {
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .filters {
+            margin-bottom: 20px;
+        }
+        .vehicle-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .vehicle-card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            width: 250px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            text-align: center;
+            background-color: #fff;
+        }
+        .vehicle-card .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .vehicle-card h3 {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .vehicle-card p {
+            margin: 2px 0;
+            font-size: 14px;
+        }
+        .vehicle-card button {
+            margin-top: 10px;
+        }
+        .edit-form input {
+            margin-bottom: 5px;
+            display: block;
+            width: 100%;
+            padding: 8px;
+        }
+        .icon img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+.vehicle-item {
+    display: flex;
+    align-items: center;
+}
+.vehicle-info {
+    flex: 1;
+}
+.vehicle-card {
+    width: 300px;
+    margin: 10px;
+    display: inline-block;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.icon-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.icon-container img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.default-info {
+    padding: 10px;
+    background: #f9f9f9;
+}
+
+.default-info button {
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.hidden-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.95);
+    padding: 10px;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.icon-container:hover .hidden-info {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+
+    </style>
+</head>
+<body>
+    <h1>Tableau de bord – Véhicules</h1>
+
+    <div class="filters">
+        <label>Filtrer par immatriculation : </label>
+        <input type="text" id="filter-registration">
+        <button onclick="filterByRegistration()">Rechercher</button>
+        &nbsp;&nbsp;
+        <label>Filtrer par prix max : </label>
+        <input type="number" id="filter-price">
+        <button onclick="filterByPrice()">Rechercher</button>
+        <button onclick="loadVehicles()">Réinitialiser</button>
+    </div>
+
+    <div id="vehicle-list" class="vehicle-list"></div>
+
+    <button id="toggle-form">Ajouter un véhicule</button>
+
+    <div id="add-form">
+        <h3>Ajouter un nouveau véhicule</h3>
+        <form id="vehicleForm">
+            <input type="text" name="registrationNumber" placeholder="Matricule" required><br>
+            <input type="text" name="make" placeholder="Marque" required><br>
+            <input type="text" name="model" placeholder="Modèle" required><br>
+            <input type="number" name="year" placeholder="Année" required><br>
+            <input type="number" name="rentalPrice" placeholder="Prix de location" required><br>
+            <button type="submit">Valider</button>
+        </form>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('access_token');
+        console.log(token);
+        if (!token) {
+            alert("Session expirée. Veuillez vous reconnecter.");
+            window.location.href = "/";
+        }
+
+        async function loadVehicles() {
+            const res = await fetch('http://localhost:5000/vehicles', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) return alert("Échec du chargement des véhicules.");
+            const data = await res.json();
+            displayVehicles(data.vehicles);
+        }
+
+        function displayVehicles(vehicles) {
+            const container = document.getElementById('vehicle-list');
+            container.innerHTML = '';
+
+            vehicles.forEach(v => {
+    const div = document.createElement('div');
+    div.className = 'vehicle-card';
+    const randomImg = Math.floor(Math.random() * 10) + 1;
+    
+    div.innerHTML = `
+        <div class="icon-container">
+            <img src="/static/images/car${randomImg}.jpeg" alt="Véhicule">
+            <div class="default-info">
+                <p><strong>Marque :</strong> ${v.make}</p>
+                <p><strong>Prix :</strong> ${v.rentalPrice} FCFA</p>
+                <button onclick="deleteVehicle(${v.id})">Supprimer</button>
+                <button onclick='showEditForm(${v.id}, ${JSON.stringify(v).replace(/"/g, '&quot;')})'>Modifier</button>
+            </div>
+            <div class="hidden-info">
+                <p><strong>Immatriculation :</strong> ${v.registrationNumber}</p>
+                <p><strong>Modèle :</strong> ${v.model}</p>
+                <p><strong>Année :</strong> ${v.year}</p>
+            </div>
+        </div>
+        <div id="edit-${v.id}" style="display:none;"></div>
+    `;
+    
+    container.appendChild(div);
+});
+
+        }
+
+        async function deleteVehicle(id) {
+            if (!confirm("Supprimer ce véhicule ?")) return;
+            await fetch(`/vehicles/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            loadVehicles();
+        }
+
+        function showEditForm(id, vehicle) {
+            const formContainer = document.getElementById(`edit-${id}`);
+            const card = formContainer.parentNode;
+            card.innerHTML = `
+                <form class="edit-form" onsubmit="submitEditForm(event, ${id})">
+                    <input type="text" name="registrationNumber" value="${vehicle.registrationNumber}" required>
+                    <input type="text" name="make" value="${vehicle.make}" required>
+                    <input type="text" name="model" value="${vehicle.model}" required>
+                    <input type="number" name="year" value="${vehicle.year}" required>
+                    <input type="number" name="rentalPrice" value="${vehicle.rentalPrice}" required>
+                    <button type="submit">Enregistrer</button>
+                    <button type="button" onclick="loadVehicles()">Annuler</button>
+                </form>
+            `;
+        }
+
+        async function submitEditForm(e, id) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                registrationNumber: form.registrationNumber.value,
+                make: form.make.value,
+                model: form.model.value,
+                year: form.year.value,
+                rentalPrice: form.rentalPrice.value
+            };
+
+            await fetch(`/vehicles/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(data)
+            });
+
+            loadVehicles();
+        }
+
+        document.getElementById('vehicleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                registrationNumber: form.registrationNumber.value,
+                make: form.make.value,
+                model: form.model.value,
+                year: form.year.value,
+                rentalPrice: form.rentalPrice.value
+            };
+
+            await fetch('/vehicles', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(data)
+            });
+
+            form.reset();
+            document.getElementById('add-form').style.display = 'none';
+            loadVehicles();
+        });
+
+        document.getElementById('toggle-form').addEventListener('click', () => {
+            const form = document.getElementById('add-form');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+
+        async function filterByRegistration() {
+            const val = document.getElementById('filter-registration').value;
+            if (!val) return;
+            const res = await fetch(`/vehicles/search/registration/${val}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.status === 404) {
+                alert("Aucun véhicule trouvé");
+                return;
+            }
+            const data = await res.json();
+            displayVehicles([data]);
+        }
+
+        async function filterByPrice() {
+            const price = document.getElementById('filter-price').value;
+            if (!price) return;
+            const floatPrice = parseFloat(price).toFixed(1);
+            const res = await fetch(`/vehicles/search/price/${floatPrice}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await res.json();
+            displayVehicles(data);
+        }
+
+        loadVehicles();
+    </script>
+</body>
+</html>
+
