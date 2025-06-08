@@ -3,10 +3,10 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - resoudre-registrer-login-user
+      - resoudre-register-login-user
   pull_request:
     branches:
-      - resoudre-registrer-login-user
+      - resoudre-register-login-user
 
 jobs:
   test:
