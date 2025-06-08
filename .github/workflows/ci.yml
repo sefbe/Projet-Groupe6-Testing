@@ -1,0 +1,51 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - resoudre-registrer-login-user
+  pull_request:
+    branches:
+      - resoudre-registrer-login-user
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.9]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # Setup Python environment
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        run: |
+          npm install
+
+      # Install Playwright browsers and dependencies
+      - name: Install Playwright browsers and dependencies
+        run: |
+          npx playwright install --with-deps
+
+      # Run Playwright tests (frontend)
+      - name: Run Playwright tests
+        run: |
+          npx playwright test
+
+      # (Optionnel) Run Python backend tests if you have any
+      - name: Run Python tests
+        run: |
+          pytest
