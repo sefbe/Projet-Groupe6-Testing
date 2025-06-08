@@ -3,10 +3,10 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - resoudre-registrer-login-user
+      - main
   pull_request:
     branches:
-      - resoudre-registrer-login-user
+      - main
 
 jobs:
   test:
@@ -31,9 +31,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install frontend dependencies
-        run: |
-          npm install
 
       # Install Playwright browsers and dependencies
       - name: Install Playwright browsers and dependencies
