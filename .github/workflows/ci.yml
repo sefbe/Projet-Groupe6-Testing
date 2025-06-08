@@ -3,10 +3,10 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - main
+      - resoudre-registrer-login-user
   pull_request:
     branches:
-      - main
+      - resoudre-registrer-login-user
 
 jobs:
   test:
@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         python-version: [3.9]
-        node-version: [18]
 
     steps:
       - name: Checkout repo
@@ -32,27 +31,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Setup Node.js environment
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
       - name: Install frontend dependencies
         run: |
-          cd frontend
           npm install
 
       # Install Playwright browsers and dependencies
       - name: Install Playwright browsers and dependencies
         run: |
-          cd frontend
           npx playwright install --with-deps
 
       # Run Playwright tests (frontend)
       - name: Run Playwright tests
         run: |
-          cd frontend
           npx playwright test
 
       # (Optionnel) Run Python backend tests if you have any
