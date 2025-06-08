@@ -62,14 +62,15 @@ def get_profile():
 @user_bp.route("/<int:user_id>", methods=["PUT"])
 @jwt_required()
 def update_user(user_id):
-    current_id = get_jwt_identity()
-    if int(current_id) != user_id:
-        return jsonify({"error": "Accès non autorisé"}), 403
-
+    
     data = request.get_json()
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": "Utilisateur non trouvé"}), 404
+    
+    current_id = get_jwt_identity()
+    if int(current_id) != user_id:
+        return jsonify({"error": "Accès non autorisé"}), 403
 
     user.username = data.get("username", user.username)
     user.email = data.get("email", user.email)

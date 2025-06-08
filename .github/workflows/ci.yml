@@ -3,10 +3,10 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - resoudre-register-login-user
+      - main
   pull_request:
     branches:
-      - resoudre-register-login-user
+      - main
 
 jobs:
   test:
@@ -37,10 +37,10 @@ jobs:
         run: |
           npx playwright install --with-deps
 
-      # # Run Playwright tests (frontend)
-      # - name: Run Playwright tests
-      #   run: |
-      #     npx playwright test
+      # Run Playwright tests (frontend)
+      - name: Run Playwright tests
+        run: |
+          npx playwright test
 
       # (Optionnel) Run Python backend tests if you have any
       - name: Run Python tests
