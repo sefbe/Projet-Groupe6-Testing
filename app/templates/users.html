@@ -1,0 +1,33 @@
+<!-- templates/users.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des utilisateurs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/users.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestion des utilisateurs</h1>
+
+        <div class="controls">
+            <a href="{{ url_for('frontend.add_user') }}">
+                <button>Ajouter un utilisateur</button>
+            </a>
+        </div>
+
+        <div id="errorMessage" class="message"></div>
+        <div id="successMessage" class="message"></div>
+
+        <div id="user-list">
+            <!-- Chargé via JS -->
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/users.js') }}"></script>
+</body>
+</html>
+
