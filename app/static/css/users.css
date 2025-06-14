@@ -1,0 +1,214 @@
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container for the main content */
+.container {
+    max-width: 700px; /* Réduit la largeur maximale du conteneur principal */
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Page Title */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: 600;
+}
+
+/* Controls Section (Add User Button) */
+.controls {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.controls button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #007bff;
+    color: white;
+}
+
+.controls button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Message Boxes (Error/Success) */
+.message {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    display: block; /* Shown by default for initial messages, JS will hide/show */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#errorMessage {
+    background-color: #fdeded;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+    display: none; /* Hidden by default, shown by JS on error */
+}
+
+#successMessage {
+    background-color: #eafaf1;
+    color: #28a745;
+    border: 1px solid #28a745;
+    display: none; /* Hidden by default, shown by JS on success */
+}
+
+
+/* User List Display */
+#user-list {
+    display: grid;
+    /* Ajuste le nombre de colonnes pour qu'elles soient un peu plus petites */
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Réduit la largeur minimale des cartes */
+    gap: 20px; /* Réduit l'espacement entre les cartes */
+    padding: 10px; /* Réduit le padding autour de la liste */
+}
+
+/* Individual User Card */
+.user-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    padding: 15px; /* Réduit le padding interne de la carte */
+}
+
+.user-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.user-card h3 {
+    font-size: 1.3em; /* Légèrement réduit la taille du titre */
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 8px; /* Réduit l'espacement */
+    font-weight: 600;
+}
+
+.user-card p {
+    font-size: 0.95em; /* Légèrement réduit la taille du texte */
+    color: #666;
+    margin: 4px 0; /* Réduit l'espacement */
+}
+
+.user-card p strong {
+    color: #333;
+}
+
+/* Action Buttons within Card */
+.user-card a button,
+.user-card .delete-btn {
+    padding: 8px 15px; /* Réduit le padding des boutons */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em; /* Légèrement réduit la taille de la police des boutons */
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 8px 4px 0; /* Réduit le margin pour l'espacement entre les boutons */
+}
+
+.user-card a button { /* Modifier button */
+    background-color: #ffc107;
+    color: #333;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.user-card a button:hover {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+}
+
+.user-card .delete-btn { /* Supprimer button */
+    background-color: #dc3545;
+    color: white;
+}
+
+.user-card .delete-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* No User Found Message */
+#user-list p {
+    text-align: center;
+    grid-column: 1 / -1;
+    font-size: 1.1em; /* Légèrement réduit la taille du message */
+    color: #777;
+    margin-top: 40px; /* Réduit le margin top */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        max-width: 90%; /* Ajuste la largeur du conteneur pour les écrans plus petits */
+    }
+    #user-list {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajuste pour les tablettes */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px; /* Réduit le padding sur les très petits écrans */
+        margin: 10px auto;
+    }
+
+    h1 {
+        font-size: 1.8em; /* Réduit la taille du titre */
+    }
+
+    #user-list {
+        grid-template-columns: 1fr; /* Une seule colonne sur les très petits écrans */
+        gap: 15px; /* Réduit l'espacement */
+        padding: 5px;
+    }
+
+    .user-card {
+        padding: 12px;
+    }
+
+    .user-card h3 {
+        font-size: 1.2em;
+    }
+
+    .user-card p {
+        font-size: 0.9em;
+    }
+
+    .user-card a button,
+    .user-card .delete-btn {
+        width: calc(50% - 8px); /* Ajuste la largeur des boutons */
+        margin: 8px 3px 0;
+        font-size: 0.8em;
+    }
+}
