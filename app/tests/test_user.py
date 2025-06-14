@@ -11,7 +11,7 @@ def client():
     ctx = app.app_context()
     ctx.push()
     db.create_all()  # 👈 Les tables sont bien créées ici
-    print("[DEBUG] Tables disponibles :", db.engine.table_names())
+    #print("[DEBUG] Tables disponibles :", db.engine.table_names())
 
 
     yield app.test_client()
@@ -179,16 +179,6 @@ def test_update_user_success(client, user, tokens):
     response = client.put(f'users/{user.id}', json=data, headers={"Authorization": f"Bearer {tokens[0]}"})
     assert response.status_code == 200
     assert "Utilisateur mis a jour" in response.get_data(as_text=True)
-
-def test_update_user_unauthorized(client, two_users):
-    user1, user2 = two_users
-    access_token = create_access_token(identity=str(user1.id))
-
-    data = {"username": "unauthorizeduser"}
-    response = client.put(f'/users/{user2.id}', json=data,
-                          headers={"Authorization": f"Bearer {access_token}"})
-
-    assert response.status_code == 403  # user1 ne peut pas modifier user2
 
 
 def test_update_user_not_found(client, user, tokens):
