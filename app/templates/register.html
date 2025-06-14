@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+<body>
+
+<div class="register-container">
+    <h2>Créer un compte</h2>
+    <form id="registerForm">
+        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+        <input type="email" id="email" placeholder="Adresse e-mail" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <div class="error" id="errorMessage"></div>
+        <button type="submit">S'inscrire</button>
+    </form>
+    <div class="login-link">
+        <p>Déjà un compte ? <a href="/">Se connecter</a></p>
+    </div>
+</div>
+
+<!-- Link to the external JavaScript file -->
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
+</body>
+</html>
+

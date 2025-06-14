@@ -1,0 +1,172 @@
+/* static/css/styles.css */
+
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align elements to the top */
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+/* Container for the main content (used across multiple pages like forms and lists) */
+.container {
+    max-width: 900px; /* Default width, can be overridden by page-specific styles */
+    width: 100%; /* Ensure it takes full width within max-width */
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+/* Page Title */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5em; /* Larger title for main pages */
+    font-weight: 600;
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form groups */
+}
+
+.form-group {
+    margin-bottom: 10px; /* Space below each form group */
+}
+
+.form-group label {
+    display: block; /* Make label take its own line */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding and border in width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition on focus */
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="number"]:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2); /* Soft glow on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Action Buttons for Forms (e.g., submit and cancel buttons) */
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Space between buttons */
+    margin-top: 20px; /* Space above the button group */
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.form-actions .btn-primary {
+    background-color: #28a745; /* Green for primary action */
+    color: white;
+}
+
+.form-actions .btn-primary:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.form-actions .btn-secondary {
+    background-color: #6c757d; /* Grey for secondary action (e.g., Cancel) */
+    color: white;
+}
+
+.form-actions .btn-secondary:hover {
+    background-color: #5a6268; /* Darker grey on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Message Boxes (for error or success feedback) */
+.message-box {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    display: none; /* Hidden by default, JS will control visibility */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.message-box.error {
+    background-color: #fdeded; /* Light red background */
+    color: #e74c3c; /* Dark red text */
+    border: 1px solid #e74c3c; /* Red border */
+}
+
+.message-box.success {
+    background-color: #eafaf1; /* Light green background */
+    color: #28a745; /* Dark green text */
+    border: 1px solid #28a745; /* Green border */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px; /* Reduce overall padding on smaller screens */
+    }
+    .container {
+        padding: 20px; /* Adjust container padding */
+        margin: 15px auto; /* Adjust container margin */
+        max-width: 95%; /* Allow container to take more width on smaller screens */
+    }
+    h1 {
+        font-size: 2em; /* Reduce title size */
+        margin-bottom: 20px;
+    }
+    .form-actions {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        gap: 10px;
+    }
+    .form-actions button {
+        width: 100%; /* Make buttons full width when stacked */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px; /* Further reduce container padding on very small screens */
+        margin: 10px auto;
+    }
+    h1 {
+        font-size: 1.8em; /* Further reduce title size */
+    }
+}
