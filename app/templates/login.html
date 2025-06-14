@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Connexion</h2>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <div class="error" id="errorMessage"></div>
+        <button type="submit">Se connecter</button>
+    </form>
+    <div class="register-link">
+        <p>Pas encore de compte ? <a href="/register">Créer un compte</a></p>
+    </div>
+</div>
+
+<!-- Link to the external JavaScript file -->
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+</body>
+</html>

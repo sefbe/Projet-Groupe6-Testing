@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des véhicules</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vehicles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Tableau de bord – Véhicules</h1>
+
+        <div class="message-box error" id="errorMessage"></div>
+        <div class="message-box success" id="successMessage"></div>
+
+        <div class="top-controls">
+            <div>
+                <button id="add-vehicle-btn">Ajouter un véhicule</button>
+            </div>
+            <div>
+                <button id="go-to-users">Gérer les utilisateurs</button>
+            </div>
+        </div>
+
+        <div class="filters">
+            <label for="filter-registration">Filtrer par immatriculation : </label>
+            <input type="text" id="filter-registration" placeholder="Ex: ABC-123">
+            <button class="search" onclick="filterByRegistration()">Rechercher</button>
+            
+            <label for="filter-price">Filtrer par prix max : </label>
+            <input type="number" id="filter-price" placeholder="Ex: 50000">
+            <button class="search" onclick="filterByPrice()">Rechercher</button>
+            <button class="reset" onclick="loadVehicles()">Réinitialiser</button>
+        </div>
+
+        <div id="vehicle-list" class="vehicle-list">
+            </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/vehicles.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+/* static/css/add_vehicle.css */
+
+/* Import the general styles */
+@import url('styles.css');
+
+/* Specific overrides for the add_vehicle form page */
+.container {
+    max-width: 450px; /* Make the form container a bit narrower for this specific page */
+    padding: 25px; /* Adjust padding if desired */
+}
+
+h1 {
+    font-size: 2.2em; /* Slightly adjust title size for this form */
+}
+
+/* You can add more specific styles here if the add vehicle form
+   needs unique styling not covered by general styles or
+   that differs from other forms.
+   For example:
+*/
+/*
+.form-group.highlighted-field input {
+    border: 2px solid #007bff;
+}
+*/
+/* General Body Styles for Add User Page */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+    display: flex; /* Use flexbox to center content vertically and horizontally */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+}
+
+/* Container for the Add User Form */
+.container {
+    max-width: 500px; /* Adjust max-width for a more compact form */
+    width: 90%; /* Responsive width */
+    margin: 30px auto; /* Centering with margin */
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box; /* Include padding in width */
+}
+
+/* Page Title */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.2em; /* Slightly smaller for form pages */
+    font-weight: 600;
+}
+
+/* Message Boxes (Error/Success) */
+.message {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    display: none; /* Hidden by default, shown by JS */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#errorMessage {
+    background-color: #fdeded;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+#successMessage {
+    background-color: #eafaf1;
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+/* Form Group Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block; /* Labels on their own line */
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding and border in width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+/* Form Buttons */
+form button[type="submit"],
+form a button[type="button"] {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 15px; /* Space above buttons */
+    display: block; /* Each button on its own line */
+    text-decoration: none; /* Remove underline from anchor button */
+    text-align: center;
+}
+
+form button[type="submit"] {
+    background-color: #28a745; /* Green for submit */
+    color: white;
+}
+
+form button[type="submit"]:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+form a button[type="button"] {
+    background-color: #6c757d; /* Grey for cancel */
+    color: white;
+}
+
+form a button[type="button"]:hover {
+    background-color: #545b62;
+    transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    form button[type="submit"],
+    form a button[type="button"] {
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 400px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .form-group input {
+        padding: 10px;
+        font-size: 0.95em;
+    }
+}

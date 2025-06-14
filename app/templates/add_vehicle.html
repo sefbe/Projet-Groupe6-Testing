@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter un nouveau véhicule</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_vehicle.css') }}">
+    <style>
+        /* Specific styles for add_users.html if needed, e.g., to further narrow the form */
+        .container {
+            max-width: 450px; /* Make the form container a bit narrower */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ajouter un nouveau véhicule</h1>
+
+        <div class="message-box error" id="errorMessage"></div>
+        <div class="message-box success" id="successMessage"></div>
+
+        <form id="addVehicleForm">
+            <div class="form-group">
+                <label for="registrationNumber">Numéro d'immatriculation :</label>
+                <input type="text" id="registrationNumber" name="registration_number" placeholder="Ex: ABC-123-XY" required>
+            </div>
+            <div class="form-group">
+                <label for="make">Marque :</label>
+                <input type="text" id="make" name="make" placeholder="Ex: Toyota" required>
+            </div>
+            <div class="form-group">
+                <label for="model">Modèle :</label>
+                <input type="text" id="model" name="model" placeholder="Ex: Corolla" required>
+            </div>
+            <div class="form-group">
+                <label for="year">Année :</label>
+                <input type="number" id="year" name="year" placeholder="Ex: 2020" required min="1900" max="2099">
+            </div>
+            <div class="form-group">
+                <label for="rentalPrice">Prix de location (FCFA) :</label>
+                <input type="number" id="rentalPrice" name="rental_price" placeholder="Ex: 25000" required min="0">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Ajouter le véhicule</button>
+                <button type="button" class="btn-secondary" onclick="window.location.href='/vehicle'">Annuler</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/add_vehicle.js') }}"></script>
+</body>
+</html>

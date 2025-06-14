@@ -6,6 +6,7 @@ from functools import wraps
 
 vehicule_bp = Blueprint('vehicule_bp', __name__, url_prefix='/vehicles')
 
+"""
 # Décorateur pour vérifier le rôle admin
 def admin_required(fn):
     @wraps(fn)
@@ -17,43 +18,77 @@ def admin_required(fn):
         return jsonify({"error": "Accès réservé aux administrateurs"}), 403
     return wrapper
 
+"""
 # Create a vehicle (admin only)
 @vehicule_bp.route('', methods=['POST'])
 @jwt_required()
-@admin_required
 def create_vehicle():
     data = request.get_json()
-    vehicle = Vehicle(
-        registrationNumber=data['registrationNumber'],
-        make=data['make'],
-        model=data['model'],
-        year=data['year'],
-        rentalPrice=data['rentalPrice']
-    )
-    db.session.add(vehicle)
-    db.session.commit()
+
+    required_fields = ['registrationNumber', 'make', 'model', 'year', 'rentalPrice']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing field: {field}"}), 400
+
+    try:
+        vehicle = Vehicle(
+            registrationNumber=data['registrationNumber'],
+            make=data['make'],
+            model=data['model'],
+            year=data['year'],
+            rentalPrice=data['rentalPrice']
+        )
+        db.session.add(vehicle)
+        db.session.commit()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
     return jsonify({'message': 'Vehicle created successfully'}), 201
+
 
 # Get all vehicles (auth required)
 @vehicule_bp.route('', methods=['GET'])
 @jwt_required()
 def get_vehicles():
     vehicles = Vehicle.query.all()
-    return jsonify([{
+    vehicles_list = [{
         'id': v.id,
         'registrationNumber': v.registrationNumber,
         'make': v.make,
         'model': v.model,
         'year': v.year,
         'rentalPrice': v.rentalPrice
-    } for v in vehicles])
+    } for v in vehicles]
+    return jsonify({'vehicles': vehicles_list}), 200
+    
+@vehicule_bp.route('/<int:vehicle_id>', methods=['GET'])
+@jwt_required()
+def get_vehicle_by_id(vehicle_id):
+    vehicle = Vehicle.query.get(vehicle_id)
+    if vehicle is None:
+        return jsonify({"message": "Vehicle not found"}), 404
+
+    vehicle_data = {
+        "id": vehicle.id,
+        "registrationNumber": vehicle.registrationNumber,
+        "make": vehicle.make,
+        "model": vehicle.model,
+        "year": vehicle.year,
+        "rentalPrice": vehicle.rentalPrice
+    }
+    return jsonify({"vehicle": vehicle_data}), 200
+
+
+
 
 # Update a vehicle by ID (admin only)
 @vehicule_bp.route('/<int:vehicle_id>', methods=['PUT'])
 @jwt_required()
-@admin_required
 def update_vehicle(vehicle_id):
-    vehicle = Vehicle.query.get_or_404(vehicle_id)
+    vehicle = Vehicle.query.get(vehicle_id)
+    if vehicle is None:
+        return jsonify({"message": "Vehicle not found"}), 404
+
     data = request.get_json()
     vehicle.registrationNumber = data.get('registrationNumber', vehicle.registrationNumber)
     vehicle.make = data.get('make', vehicle.make)
@@ -61,17 +96,31 @@ def update_vehicle(vehicle_id):
     vehicle.year = data.get('year', vehicle.year)
     vehicle.rentalPrice = data.get('rentalPrice', vehicle.rentalPrice)
     db.session.commit()
-    return jsonify({'message': 'Vehicle updated successfully'})
+
+    vehicle_data = {
+        "id": vehicle.id,
+        "registrationNumber": vehicle.registrationNumber,
+        "make": vehicle.make,
+        "model": vehicle.model,
+        "year": vehicle.year,
+        "rentalPrice": vehicle.rentalPrice
+    }
+
+    return jsonify({'message': 'Vehicle updated successfully', 'vehicle': vehicle_data})
+
 
 # Delete a vehicle by ID (admin only)
 @vehicule_bp.route('/<int:vehicle_id>', methods=['DELETE'])
 @jwt_required()
-@admin_required
 def delete_vehicle(vehicle_id):
-    vehicle = Vehicle.query.get_or_404(vehicle_id)
+    vehicle = Vehicle.query.get(vehicle_id)
+    if vehicle is None:
+        return jsonify({"message": "Vehicle not found"}), 404
+    
     db.session.delete(vehicle)
     db.session.commit()
     return jsonify({'message': 'Vehicle deleted successfully'})
+
 
 # Search by registration number (auth required)
 @vehicule_bp.route('/search/registration/<string:registration_number>', methods=['GET'])

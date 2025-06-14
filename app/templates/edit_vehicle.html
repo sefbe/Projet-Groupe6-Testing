@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un véhicule</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vehicles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_vehicle.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Modifier un véhicule</h1>
+
+        <div class="message-box error" id="errorMessage"></div>
+        <div class="message-box success" id="successMessage"></div>
+
+        <form id="editVehicleForm">
+            <!-- Champ caché pour stocker l'ID du véhicule -->
+            <input type="hidden" id="vehicleId" name="vehicleId">
+
+            <div class="form-group">
+                <label for="registrationNumber">Numéro d'immatriculation :</label>
+                <input type="text" id="registrationNumber" name="registration_number" required>
+            </div>
+            <div class="form-group">
+                <label for="make">Marque :</label>
+                <input type="text" id="make" name="make" required>
+            </div>
+            <div class="form-group">
+                <label for="model">Modèle :</label>
+                <input type="text" id="model" name="model" required>
+            </div>
+            <div class="form-group">
+                <label for="year">Année :</label>
+                <input type="number" id="year" name="year" required min="1900" max="2099">
+            </div>
+            <div class="form-group">
+                <label for="rentalPrice">Prix de location (FCFA) :</label>
+                <input type="number" id="rentalPrice" name="rental_price" required min="0">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Enregistrer les modifications</button>
+                <button type="button" class="btn-secondary" onclick="window.location.href='/vehicle'">Annuler</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/edit_vehicle.js') }}"></script>
+</body>
+</html>
+

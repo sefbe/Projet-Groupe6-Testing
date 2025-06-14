@@ -1,0 +1,363 @@
+/* static/css/vehicles.css */
+
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container for the main content */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Page Title */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: 600;
+}
+
+/* Message Boxes (Error/Success) */
+.message-box {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    display: none; /* Hidden by default */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.message-box.error {
+    background-color: #fdeded;
+    color: #e74c3c;
+    border: 1px solid #e74c3c;
+}
+
+.message-box.success {
+    background-color: #eafaf1;
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+/* Top Controls - Buttons for Add Vehicle and Manage Users */
+.top-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    gap: 15px; /* Space between buttons if they wrap */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.top-controls button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#add-vehicle-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+#add-vehicle-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+#go-to-users {
+    background-color: #6c757d;
+    color: white;
+}
+
+#go-to-users:hover {
+    background-color: #545b62;
+    transform: translateY(-2px);
+}
+
+/* Filters Section */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.filters label {
+    font-weight: 600;
+    color: #555;
+}
+
+.filters input[type="text"],
+.filters input[type="number"] {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95em;
+    width: 180px; /* Standard width for inputs */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filters input[type="text"]:focus,
+.filters input[type="number"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.filters button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.filters button.search {
+    background-color: #28a745;
+    color: white;
+}
+
+.filters button.search:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+.filters button.reset {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.filters button.reset:hover {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+}
+
+/* Vehicle List Display */
+.vehicle-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 15px;
+}
+
+/* Individual Vehicle Card */
+.vehicle-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative; /* Needed for absolute positioning of overlay */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    display: flex; /* Use flexbox to stack image, content, and actions */
+    flex-direction: column;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.vehicle-card .image-container {
+    position: relative; /* To position overlay relative to image */
+    width: 100%;
+    height: 200px; /* Fixed height for images */
+    overflow: hidden; /* Hide overflow from images */
+}
+
+.vehicle-card img {
+    width: 100%;
+    height: 100%; /* Take full height of its container */
+    object-fit: cover; /* Ensure images cover the area without distortion */
+    border-bottom: 1px solid #eee;
+    transition: filter 0.3s ease;
+}
+
+.vehicle-card:hover img {
+    filter: brightness(70%); /* Darken image on hover */
+}
+
+/* Overlay for vehicle details on hover */
+.vehicle-details-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: center; /* Ensure text within overlay is centered */
+}
+
+.vehicle-card:hover .vehicle-details-overlay {
+    opacity: 1; /* Show on hover */
+}
+
+.vehicle-details-overlay h3,
+.vehicle-details-overlay p {
+    color: white;
+    margin: 5px 0;
+    font-size: 1.1em;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    z-index: 2; /* Ensure text is above any other elements if z-index issues arise */
+}
+
+.vehicle-details-overlay h3 {
+    font-size: 1.6em;
+    margin-bottom: 10px;
+}
+
+/* Content below image - always visible */
+.vehicle-card .card-content {
+    padding: 15px;
+    text-align: center;
+    flex-grow: 1; /* Allow this section to grow and take available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically if space allows */
+}
+
+.vehicle-card .card-content h3 {
+    font-size: 1.4em;
+    color: #2c3e50;
+    margin: 0 0 5px; /* Remove top margin, keep bottom margin */
+    font-weight: 600;
+}
+
+.vehicle-card .card-content p {
+    font-size: 1em;
+    color: #666;
+    margin: 5px 0;
+}
+
+.vehicle-card .card-content p strong {
+    color: #333;
+}
+
+/* Action Buttons within Card - always visible below content */
+.vehicle-card .actions {
+    padding: 15px;
+    background-color: #fdfdfd;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    /* Ensure buttons are not affected by hover opacity */
+    position: relative; /* To keep them on top if needed */
+    z-index: 10; /* Higher z-index to ensure visibility */
+}
+
+.vehicle-card .actions button {
+    padding: 9px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.vehicle-card .actions button:first-child { /* Modifier button */
+    background-color: #ffc107;
+    color: #333;
+}
+
+.vehicle-card .actions button:first-child:hover {
+    background-color: #e0a800;
+    transform: translateY(-1px);
+}
+
+.vehicle-card .actions button:last-child { /* Supprimer button */
+    background-color: #dc3545;
+    color: white;
+}
+
+.vehicle-card .actions button:last-child:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+/* No Vehicles Found Message */
+.vehicle-list p {
+    text-align: center;
+    grid-column: 1 / -1; /* Center across all columns */
+    font-size: 1.2em;
+    color: #777;
+    margin-top: 50px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters input[type="text"],
+    .filters input[type="number"] {
+        width: 100%;
+    }
+
+    .top-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .top-controls button {
+        width: 100%;
+    }
+
+    .vehicle-list {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+        margin: 15px auto;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .vehicle-list {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+}

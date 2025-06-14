@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    padding: 50px;
+    display: flex; /* Utilisation de flexbox pour centrer */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Hauteur minimale de la vue pour centrer verticalement */
+    margin: 0;
+}
+.login-container {
+    max-width: 400px;
+    width: 90%; /* Responsive width */
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-sizing: border-box; /* Inclure padding et border dans la largeur */
+}
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Inclure padding et border dans la largeur */
+    font-size: 1em;
+}
+button {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #0056b3;
+}
+.error {
+    color: red;
+    margin-top: -15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+}
+.register-link p {
+    margin: 0;
+    color: #555;
+}
+.register-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    body {
+        padding: 20px;
+    }
+    .login-container {
+        padding: 20px;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+}
+

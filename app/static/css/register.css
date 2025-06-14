@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    padding: 50px;
+    display: flex; /* Using flexbox for centering */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Minimum viewport height to center vertically */
+    margin: 0;
+}
+.register-container {
+    max-width: 400px;
+    width: 90%; /* Responsive width */
+    margin: auto;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-sizing: border-box; /* Include padding and border in width */
+}
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Include padding and border in width */
+    font-size: 1em;
+}
+button {
+    width: 100%;
+    background-color: #28a745; /* Green color for register button */
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+.error {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+}
+.login-link p {
+    margin: 0;
+    color: #555;
+}
+.login-link a {
+    color: #007bff; /* Blue color for login link */
+    text-decoration: none;
+    font-weight: bold;
+}
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    body {
+        padding: 20px;
+    }
+    .register-container {
+        padding: 20px;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+}
+
