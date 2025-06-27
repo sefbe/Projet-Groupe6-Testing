@@ -4,7 +4,7 @@
 
 # Création de l'environnement virtuel + installation des dépendances Python et Node
 install:
-	@echo "🛠️  Installation des dépendances Python et Node..."
+	@echo "  Installation des dépendances Python et Node..."
 	python -m venv venv && \
 	source venv/bin/activate && \
 	pip install --upgrade pip && \
@@ -14,15 +14,21 @@ install:
 	npm install -D playwright && \
 	npx playwright install
 
+#lancer l'application
+run:
+	@echo "Demarrage du serveur"
+	python3 run.py
+
 # Exécution des tests Python (backend)
 test-backend:
-	@echo "✅ Lancement des tests Pytest (backend)..."
+	@echo " Lancement des tests Pytest (backend)..."
 	source venv/bin/activate && \
 	pytest app/tests/
 
 # Exécution des tests Playwright (frontend)
 test-frontend:
-	@echo "✅ Lancement des tests Playwright (frontend)..."
+	@echo " Lancement des tests Playwright (frontend)..."
+	python3 run.py && \
 	cd tests && \
 	npx playwright test
 
