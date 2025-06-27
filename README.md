@@ -32,7 +32,6 @@ pip install -r requirements.txt
 ### 2. Installer Playwright
 Si package.json n'existe pas encore :
 
-cd tests
 npm init -y
 npm install -D playwright
 npx playwright install
