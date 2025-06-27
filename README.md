@@ -1,8 +1,8 @@
-# 🚀 Projet-Groupe6-Testing
+#  Projet-Groupe6-Testing
 
 Projet de tests automatisés combinant :
-- ✅ **Backend en Python** avec **Flask** et **Pytest**
-- ✅ **Frontend testé avec Playwright** en **TypeScript**
+-  **Backend en Python** avec **Flask** et **Pytest**
+-  **Frontend testé avec Playwright** en **TypeScript**
 
 
 
