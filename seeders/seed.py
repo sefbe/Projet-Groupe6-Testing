@@ -1,10 +1,13 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from app import db, create_app  # on récupère db et l'app depuis app/__init__.py
+from app import db, create_app
 from app.models.user import User
-from app.models.vehicle import Vehicle
+from app.models.vehicule import Vehicle
 from werkzeug.security import generate_password_hash
 
-app = create_app()  # Crée l'application Flask avec config
+app = create_app()
 
 def seed():
     with app.app_context():
@@ -12,8 +15,10 @@ def seed():
         db.create_all()
 
         # Créer des utilisateurs
-        user1 = User(username="admin", password_hash=generate_password_hash("admin123"))
-        user2 = User(username="john", password_hash=generate_password_hash("pass456"))
+        user1 = User(username="admin", email="admin@example.com", role="admin")
+        user1.set_password("admin123")
+        user2 = User(username="john", email="john@example.com", role="user")
+        user2.set_password("pass456")
 
         # Créer des véhicules
         vehicle1 = Vehicle(
@@ -37,4 +42,3 @@ def seed():
 
 if __name__ == "__main__":
     seed()
-

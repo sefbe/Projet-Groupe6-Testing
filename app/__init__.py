@@ -1,54 +1,54 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
-from flask_cors import CORS  # ← Ajouté
+from flask_cors import CORS
+from tenacity import retry, stop_after_attempt, wait_fixed
 import logging
 
 from app.config import Config, TestingConfig
-from flask import Flask, jsonify
 from flask_jwt_extended.exceptions import JWTExtendedException
 
-app = Flask(__name__)
-
-# ... ta configuration JWT, db, blueprints etc.
-
-@app.errorhandler(JWTExtendedException)
-def handle_jwt_errors(e):
-    return jsonify({"error": str(e)}), 422
-    
 db = SQLAlchemy()
 jwt = JWTManager()
+
+@retry(stop=stop_after_attempt(10), wait=wait_fixed(5))
+def init_db(app):
+    if not hasattr(app, 'extensions') or 'sqlalchemy' not in app.extensions:
+        logging.debug("Initializing SQLAlchemy for app")
+        db.init_app(app)
+        
+        # IMPORTANT: Import all models to register them with SQLAlchemy
+        from app.models import User, Vehicle
+        
+        with app.app_context():
+            logging.debug("Creating all tables")
+            db.create_all()
+            # Vérifier les tables créées
+            inspector = db.inspect(db.engine)
+            tables = inspector.get_table_names()
+            logging.debug(f"Tables in database: {tables}")
 
 def create_app(config_name=None):
     app = Flask(__name__)
 
-    # Activer les CORS pour permettre les requêtes JS → API
     CORS(app)
 
-    # Configuration
     if config_name == 'testing':
         app.config.from_object(TestingConfig)
     else:
         app.config.from_object(Config)
 
-    # Initialisation des extensions
-    db.init_app(app)
+    init_db(app)
     jwt.init_app(app)
 
-    # Enregistrement des blueprints
     from app.routes.user_routes import user_bp
     from app.routes.vehicule_routes import vehicule_bp
     from app.routes.frontend_routes import frontend
-    
+
     app.register_blueprint(user_bp)
     app.register_blueprint(vehicule_bp)
     app.register_blueprint(frontend)
 
-    # Création des tables si besoin
-    with app.app_context():
-        db.create_all()
-
-    # Gestion des erreurs JWT
     @jwt.invalid_token_loader
     def invalid_token_callback(reason):
         print(f"[JWT ERROR] Invalid token: {reason}")
@@ -64,9 +64,9 @@ def create_app(config_name=None):
         print(f"[JWT ERROR] Unauthorized: {reason}")
         return jsonify({"msg": reason}), 401
 
-    # Logger pour le débogage
+    @app.errorhandler(JWTExtendedException)
+    def handle_jwt_errors(e):
+        return jsonify({"error": str(e)}), 422
+
     logging.basicConfig(level=logging.DEBUG)
-    
-
     return app
-

@@ -1,7 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-from app.models import db
-
-#db = SQLAlchemy()
+from app import db
 
 class Vehicle(db.Model):
     __tablename__ = 'vehicles'
@@ -15,4 +12,3 @@ class Vehicle(db.Model):
 
     def __repr__(self):
         return f"<Vehicle {self.registrationNumber}>"
-
